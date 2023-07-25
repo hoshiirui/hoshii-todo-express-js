@@ -28,34 +28,18 @@ const TodoList = () => {
                     </div>
                     <button type="submit" className="btn btn-primary btn-lg ms-2">Add</button>
                   </form>
-                  
-                  {/* Menampilkan isinya */}
                   <ul className="list-group mb-0">
-                  <h6><b>Due Today</b></h6>
-                    {todos.map((todo, index) => {
-                        // Convert the todo.deadline to a Date object
-                        const deadlineDate = new Date(todo.deadline);
-
-                        // Get the options for customizing the time format
-                        const options = { hour: 'numeric', minute: 'numeric' };
-
-                        // Get the time portion (hour and minutes) in the user's local time zone
-                        const deadlineTime = deadlineDate.toLocaleTimeString(undefined, options);
-                        
-                        return (
-                            <li key={todo.id} className="list-group-item d-flex justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom rounded-0 mb-0">
+                    {todos.map((todo, index) => (
+                        <li key={todo.id} className="list-group-item d-flex d-flex justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom rounded-0 mb-0">
                             <div className="d-flex align-items-center">
                                 <input className="form-check-input me-2" type="checkbox" defaultValue aria-label="..." defaultChecked />
-                                <b>{todo.title}</b>: {todo.description}
+                                <b>{todo.title} </b>: {todo.description} 
                             </div>
-                            <p>{deadlineTime}</p> {/* Display the extracted time */}
                             <a href="#!" title="edit-todo">
                                 <button className="btn btn-primary">Edit</button>
                             </a>
-                            </li>
-                        );
-                    })}
-
+                        </li>
+                    ))}
 
                     {/* <li className="list-group-item d-flex d-flex justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom rounded-0 mb-2">
                       <div className="d-flex align-items-center">
