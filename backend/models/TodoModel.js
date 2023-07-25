@@ -6,7 +6,8 @@ const Todo = db.define('todo', {
     title: DataTypes.STRING,
     description: DataTypes.STRING,
     status: DataTypes.INTEGER,
-    deadline: DataTypes.DATE
+    deadline: DataTypes.DATE,
+    userid: DataTypes.INTEGER
 }, {
     freezeTableName:true
 })
