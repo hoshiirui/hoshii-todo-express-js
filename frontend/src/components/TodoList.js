@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import axios from "axios"
 
 const TodoList = () => {
+    // For Getting Data
     const[todos, setTodos] = useState([])
 
     useEffect(() => {
@@ -13,6 +14,14 @@ const TodoList = () => {
         setTodos(response.data)
     }
 
+    //For Adding Data
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [status, setStatus] = useState(0);
+    const [deadline, setDeadline] = useState("");
+    const [userid, setUserid] = useState("");
+
+
   return (
     <section className="vh-100" style={{backgroundColor: '#e2d5de'}}>
         <div className="container py-5 h-100">
@@ -20,14 +29,7 @@ const TodoList = () => {
             <div className="col col-xl-10">
               <div className="card" style={{borderRadius: '15px'}}>
                 <div className="card-body p-5">
-                  <h6 className="mb-3">Awesome Todo List</h6>
-                  <form className="d-flex justify-content-center align-items-center mb-4">
-                    <div className="form-outline flex-fill">
-                      <input type="text" id="form3" className="form-control form-control-lg" />
-                      <label className="form-label" htmlFor="form3">What do you need to do today?</label>
-                    </div>
-                    <button type="submit" className="btn btn-primary btn-lg ms-2">Add</button>
-                  </form>
+                  <h4 className="mb-3">Awesome Todo List</h4>
                   
                   {/* Menampilkan isinya */}
                   <ul className="list-group mb-0">
