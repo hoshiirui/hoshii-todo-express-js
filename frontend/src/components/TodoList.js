@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import axios from "axios"
+import { Link } from 'react-router-dom'
 
 const TodoList = () => {
     // For Getting Data
@@ -52,7 +53,8 @@ const TodoList = () => {
                             </div>
                             <p>{deadlineTime}</p> {/* Display the extracted time */}
                             <a href="#!" title="edit-todo">
-                                <button className="btn btn-primary">Edit</button>
+                                {/* <button className="btn btn-primary">More</button> */}
+                                <Link to={`edit/${todo.id}`} className="btn btn-primary">More</Link>
                             </a>
                             </li>
                         );
@@ -80,8 +82,8 @@ const TodoList = () => {
                   </ul>
                 </div>
                 <div className="card-footer text-end p-3">
-                    <button className="me-2 btn btn-link">Log Out</button>
-                    <button className="btn btn-primary">Add Task</button>
+                    {/* <button className="me-2 btn btn-link">Log Out</button> */}
+                    <Link to={`add`} className="btn btn-primary">Add Todo</Link>
                 </div>
               </div>
             </div>
