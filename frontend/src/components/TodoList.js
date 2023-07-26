@@ -6,24 +6,18 @@ import { useNavigate, useParams } from 'react-router-dom'
 const TodoList = () => {
     // For Getting Data
     const[todos, setTodos] = useState([])
-    const[orderMode, setOrderMode] = useState("")
-    const {order} = useParams();
+    const[orderMode, setOrderMode] = useState("id")
 
     useEffect(() => {
-      if(order){
-        sortTodo();
-      }else{
-        getTodos();
-      }
-    }, []);
+      sortTodo()
+    }, [orderMode]);
 
-    const getTodos = async() => {
-        const response = await axios.get('http://localhost:5000/todos')
-        setTodos(response.data)
+    const orderChange = (e) => {
+      setOrderMode(e.target.value)
     }
 
     const sortTodo = async () =>{
-      const response = await axios.get(`http://localhost:5000/todos/order/${order}`)
+      const response = await axios.get(`http://localhost:5000/todos/order/${orderMode}`)
       setTodos(response.data)
     }
 
@@ -43,7 +37,7 @@ const TodoList = () => {
           deadline,
           userid
         })
-        getTodos()
+        sortTodo()
       } catch (error) {
         console.log(error);
       }
@@ -59,7 +53,7 @@ const TodoList = () => {
                   <h4 className="mb-3">Awesome Todo List</h4>
                   <div className="form-group mb-3">
                     <label htmlFor="orderMode" className="form-label">Order By:</label>
-                    <select className="form-control" id="orderMode" value={orderMode} onChange={(e) => setOrderMode(e.target.value)}>
+                    <select className="form-control" id="orderMode" value={orderMode} onChange={orderChange}>
                       <option value="id">ID</option>
                       <option value="deadline">Deadline</option>
                       <option value="title">Title</option>
@@ -109,24 +103,6 @@ const TodoList = () => {
                     })}
 
 
-                    {/* <li className="list-group-item d-flex d-flex justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom rounded-0 mb-2">
-                      <div className="d-flex align-items-center">
-                        <input className="form-check-input me-2" type="checkbox" defaultValue aria-label="..." defaultChecked />
-                        <s>Dapibus ac facilisis in</s>
-                      </div>
-                      <a href="#!" data-mdb-toggle="tooltip" title="Remove item">
-                        <i className="fas fa-times text-primary" />
-                      </a>
-                    </li>
-                    <li className="list-group-item d-flex d-flex justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom rounded-0 mb-2">
-                      <div className="d-flex align-items-center">
-                        <input className="form-check-input me-2" type="checkbox" defaultValue aria-label="..." />
-                        Morbi leo risus
-                      </div>
-                      <a href="#!" data-mdb-toggle="tooltip" title="Remove item">
-                        <i className="fas fa-times text-primary" />
-                      </a>
-                    </li> */}
                   </ul>
                 </div>
                 <div className="card-footer text-end p-3">
