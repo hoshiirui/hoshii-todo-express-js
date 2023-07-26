@@ -15,13 +15,27 @@ const TodoList = () => {
         setTodos(response.data)
     }
 
-    //For Adding Data
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [status, setStatus] = useState(0);
-    const [deadline, setDeadline] = useState("");
-    const [userid, setUserid] = useState("");
-
+    const changeStatus = async(id, title, description, status, deadline, userid) => {
+      console.log(id)
+      try {
+        if(status===0){
+          status=1
+        }else{
+          status=0
+        }
+        console.log(title)
+        await axios.patch(`http://localhost:5000/todos/${id}`, {
+          title,
+          description, 
+          status, 
+          deadline,
+          userid
+        })
+        getTodos()
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
   return (
     <section className="vh-100" style={{backgroundColor: '#e2d5de'}}>
@@ -44,11 +58,11 @@ const TodoList = () => {
 
                         // Get the time portion (hour and minutes) in the user's local time zone
                         const deadlineTime = deadlineDate.toLocaleTimeString(undefined, options);
-                        
-                        return (
+                        if(todo.status === 0){
+                          return (
                             <li key={todo.id} className="list-group-item d-flex justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom rounded-0 mb-0">
                             <div className="d-flex align-items-center">
-                                <input className="form-check-input me-2" type="checkbox" defaultValue aria-label="..." defaultChecked />
+                                <input className="form-check-input me-2" type="checkbox" onClick={()=> changeStatus(todo.id, todo.title, todo.description, todo.status, todo.deadline, todo.userid)} defaultValue aria-label="..."/>
                                 <b>{todo.title}</b>: {todo.description}
                             </div>
                             <p>{deadlineTime}</p> {/* Display the extracted time */}
@@ -57,7 +71,22 @@ const TodoList = () => {
                                 <Link to={`edit/${todo.id}`} className="btn btn-primary">More</Link>
                             </a>
                             </li>
-                        );
+                          );
+                        }else{
+                          return (
+                            <li key={todo.id} className="list-group-item d-flex justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom rounded-0 mb-0">
+                            <div className="d-flex align-items-center">
+                                <input className="form-check-input me-2" type="checkbox" onClick={()=> changeStatus(todo.id, todo.title, todo.description, todo.status, todo.deadline, todo.userid)} defaultValue aria-label="..." defaultChecked />
+                                <s><b>{todo.title}</b>: {todo.description}</s>
+                            </div>
+                            <p>{deadlineTime}</p> {/* Display the extracted time */}
+                            <a href="#!" title="edit-todo">
+                                {/* <button className="btn btn-primary">More</button> */}
+                                <Link to={`edit/${todo.id}`} className="btn btn-primary">More</Link>
+                            </a>
+                            </li>
+                          );
+                        }
                     })}
 
 
