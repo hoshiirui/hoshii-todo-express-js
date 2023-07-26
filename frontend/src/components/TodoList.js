@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 const TodoList = () => {
     // For Getting Data
     const[todos, setTodos] = useState([])
+    const[orderMode, setOrderMode] = useState("")
 
     useEffect(() => {
         getTodos();
@@ -45,7 +46,14 @@ const TodoList = () => {
               <div className="card" style={{borderRadius: '15px'}}>
                 <div className="card-body p-5">
                   <h4 className="mb-3">Awesome Todo List</h4>
-                  
+                  <div className="form-group mb-3">
+                    <label htmlFor="orderMode" className="form-label">Order By:</label>
+                    <select className="form-control" id="orderMode" value={orderMode} onChange={(e) => setOrderMode(e.target.value)}>
+                      <option value="id">ID</option>
+                      <option value="deadline">Deadline</option>
+                      <option value="title">Title</option>
+                    </select>
+                  </div>
                   {/* Menampilkan isinya */}
                   <ul className="list-group mb-0">
                   <h6><b>Due Today</b></h6>
