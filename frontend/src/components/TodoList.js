@@ -1,19 +1,30 @@
 import React, {useState, useEffect} from 'react'
 import axios from "axios"
 import { Link } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const TodoList = () => {
     // For Getting Data
     const[todos, setTodos] = useState([])
     const[orderMode, setOrderMode] = useState("")
+    const {order} = useParams();
 
     useEffect(() => {
+      if(order){
+        sortTodo();
+      }else{
         getTodos();
+      }
     }, []);
 
     const getTodos = async() => {
         const response = await axios.get('http://localhost:5000/todos')
         setTodos(response.data)
+    }
+
+    const sortTodo = async () =>{
+      const response = await axios.get(`http://localhost:5000/todos/order/${order}`)
+      setTodos(response.data)
     }
 
     const changeStatus = async(id, title, description, status, deadline, userid) => {

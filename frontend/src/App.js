@@ -8,6 +8,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<TodoList/>}/>
+        <Route path="/:order" element={<TodoList/>}/> 
         <Route path="/add" element={<AddTodo/>}/>
         <Route path="edit/:id" element={<EditTodo/>}/>
       </Routes>

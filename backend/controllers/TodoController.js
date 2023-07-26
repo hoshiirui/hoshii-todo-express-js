@@ -2,10 +2,21 @@ import Todo from "../models/TodoModel.js";
 
 export const getTodos = async(req, res) => {
     try {
-        const response = await Todo.findAll();
+
+        let orderCriteria;
+        if (req.params.order) {
+            // If req.params.order is available, use it for ordering
+            orderCriteria = [req.params.order];
+        } else {
+            // If req.params.order is not available or null, default to ordering by 'id'
+            orderCriteria = ["id"];
+        }
+        const response = await Todo.findAll({
+            order: [orderCriteria]
+        });
         res.status(200).json(response);
     } catch (error) {
-        console.log(err.message);
+        console.log(error.message);
     }
 }
 
