@@ -4,6 +4,11 @@ import { Link } from 'react-router-dom'
 import { useNavigate, useParams } from 'react-router-dom'
 
 const TodoList = () => {
+    //a little internal css
+    const customStyle = {
+      color: 'green',
+    };
+
     // For Getting Data
     const[todos, setTodos] = useState([])
     const[orderMode, setOrderMode] = useState("id")
@@ -26,6 +31,8 @@ const TodoList = () => {
       try {
         if(status===0){
           status=1
+        }else if(status===1){
+          status=2
         }else{
           status=0
         }
@@ -85,12 +92,26 @@ const TodoList = () => {
                             </a>
                             </li>
                           );
-                        }else{
+                        }else if(todo.status === 2){
                           return (
                             <li key={todo.id} className="list-group-item d-flex justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom rounded-0 mb-0">
                             <div className="d-flex align-items-center">
                                 <input className="form-check-input me-2" type="checkbox" onClick={()=> changeStatus(todo.id, todo.title, todo.description, todo.status, todo.deadline, todo.userid)} defaultValue aria-label="..." defaultChecked />
                                 <s><b>{todo.title}</b>: {todo.description}</s>
+                            </div>
+                            <p>{deadlineTime}</p> {/* Display the extracted time */}
+                            <a href="#!" title="edit-todo">
+                                {/* <button className="btn btn-primary">More</button> */}
+                                <Link to={`edit/${todo.id}`} className="btn btn-primary">More</Link>
+                            </a>
+                            </li>
+                          );
+                        }else{
+                          return (
+                            <li key={todo.id} className="list-group-item d-flex justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom rounded-0 mb-0">
+                            <div className="d-flex align-items-center">
+                                <input className="form-check-input me-2" type="checkbox" onClick={()=> changeStatus(todo.id, todo.title, todo.description, todo.status, todo.deadline, todo.userid)} defaultValue aria-label="..." />
+                                <span style={customStyle}><b>{todo.title}</b>: {todo.description}</span>
                             </div>
                             <p>{deadlineTime}</p> {/* Display the extracted time */}
                             <a href="#!" title="edit-todo">
