@@ -58,6 +58,6 @@ export const updateTodos = (req, res) => {
 export const deleteTodos = (req, res) => {
     pool.query(`DELETE FROM todo WHERE id=${req.params.id}`, (error, results) => {
         if (error) throw error;
-        res.status(200).json({ msg: `Todo with id ${req.params.id} has been deleted` });
+        res.status(200).json({ msg: `Todo with id ${req.params.id} succesfully deleted!` });
     });    
 }
