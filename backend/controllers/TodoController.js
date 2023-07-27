@@ -15,28 +15,26 @@ export const getTodos = (req, res) => {
     }
 }
 
+export const getTodoById = (req, res) => {
+    pool.query(`SELECT * FROM todo WHERE id=${req.params.id}`, (error, results) => {
+        if (error) throw error;
+        res.status(200).json(results.rows)
+    })
+}
 
-// export const getTodoById = async(req, res) => {
-//     try {
-//         const response = await Todo.findOne({
-//             where:{
-//                 id: req.params.id
-//             }
-//         });
-//         res.status(200).json(response);
-//     } catch (error) {
-//         console.log(err.message);
-//     }
-// }
+export const createTodos = (req, res) => {
+    const { title, description, status, deadline, userid } = req.body;
+    const query = `
+      INSERT INTO todo (title, description, status, deadline, userid)
+      VALUES ($1, $2, $3, $4, $5)
+    `;
+    const values = [title, description, status, deadline, userid];
 
-// export const createTodos = async(req, res) => {
-//     try {
-//         await Todo.create(req.body);
-//         res.status(201).json({msg: "Todo created!"});
-//     } catch (error) {
-//         console.log(err.message);
-//     }
-// }
+    pool.query(query, values, (error, results) => {
+        if (error) throw error;
+        res.status(201).json({ msg: 'Todo created!' });
+    })
+}
 
 // export const updateTodos = async(req, res) => {
 //     try {
