@@ -2,31 +2,19 @@
 import pool from "../config/Database.js"
 
 export const getTodos = (req, res) => {
-    pool.query("SELECT * FROM todo", (error, results) => {
-        if (error) throw error;
-        res.status(200).json(results.rows)
-    })
+    if(req.params.order){
+        pool.query(`SELECT * FROM todo ORDER BY  ${req.params.order}`, (error, results) => {
+            if (error) throw error;
+            res.status(200).json(results.rows)
+        })
+    }else{
+        pool.query("SELECT * FROM todo", (error, results) => {
+            if (error) throw error;
+            res.status(200).json(results.rows)
+        })
+    }
 }
 
-// export const getTodos = async(req, res) => {
-//     try {
-
-//         let orderCriteria;
-//         if (req.params.order) {
-//             // If req.params.order is available, use it for ordering
-//             orderCriteria = [req.params.order];
-//         } else {
-//             // If req.params.order is not available or null, default to ordering by 'id'
-//             orderCriteria = ["id"];
-//         }
-//         const response = await Todo.findAll({
-//             order: [orderCriteria]
-//         });
-//         res.status(200).json(response);
-//     } catch (error) {
-//         console.log(error.message);
-//     }
-// }
 
 // export const getTodoById = async(req, res) => {
 //     try {
