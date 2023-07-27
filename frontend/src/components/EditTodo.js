@@ -32,11 +32,12 @@ const EditTodo = () => {
 
   const getTodoById = async () =>{
     const response = await axios.get(`http://localhost:5000/todos/${id}`)
-    settitle(response.data.title)
-    setdescription(response.data.description)
-    setdeadline(response.data.deadline)
-    setstatus(response.data.status)
-    setuserid(response.data.userid)
+    const data = response.data[0]
+    settitle(data.title)
+    setdescription(data.description)
+    setdeadline(data.deadline)
+    setstatus(data.status)
+    setuserid(data.userid)
   }
 
   const saveTodo = async (e) =>{

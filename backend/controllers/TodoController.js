@@ -61,16 +61,3 @@ export const deleteTodos = (req, res) => {
         res.status(200).json({ msg: `Todo with id ${req.params.id} has been deleted` });
     });    
 }
-
-// export const deleteTodos = async(req, res) => {
-//     try {
-//         await Todo.destroy({
-//             where:{
-//                 id: req.params.id
-//             }
-//         });
-//         res.status(200).json({msg: "Todo updated!"});
-//     } catch (error) {
-//         console.log(err.message);
-//     }
-// }
