@@ -1,8 +1,12 @@
-import { Sequelize } from "sequelize";
+import pkg from 'pg';
+const { Pool } = pkg;
 
-const db = new Sequelize('todolist', 'root', '', {
-    host: 'localhost', 
-    dialect: 'mysql'
+const pool = new Pool({
+    host: '172.19.14.118',
+    port: 5432,
+    database: 'todolist',
+    user: 'postgres',
+    password: 'admin123',
 })
 
-export default db;
+export default pool
