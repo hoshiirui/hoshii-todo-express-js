@@ -36,18 +36,31 @@ export const createTodos = (req, res) => {
     })
 }
 
-// export const updateTodos = async(req, res) => {
-//     try {
-//         await Todo.update(req.body, {
-//             where:{
-//                 id: req.params.id
-//             }
-//         });
-//         res.status(200).json({msg: "Todo updated!"});
-//     } catch (error) {
-//         console.log(err.message);
-//     }
-// }
+export const updateTodos = (req, res) => {
+    const { title, description, status, deadline, userid } = req.body;
+    const query = `
+        UPDATE todo
+        SET title = $1,
+            description = $2,
+            status = $3,
+            deadline = $4,
+            userid = $5
+        WHERE id = ${req.params.id};    
+    `;
+    const values = [title, description, status, deadline, userid];
+
+    pool.query(query, values, (error, results) => {
+        if (error) throw error;
+        res.status(200).json({ msg: 'Todo updated!' });
+    })
+}
+
+export const deleteTodos = (req, res) => {
+    pool.query(`DELETE FROM todo WHERE id=${req.params.id}`, (error, results) => {
+        if (error) throw error;
+        res.status(200).json({ msg: `Todo with id ${req.params.id} has been deleted` });
+    });    
+}
 
 // export const deleteTodos = async(req, res) => {
 //     try {
