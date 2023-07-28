@@ -1,4 +1,3 @@
-// import Todo from "../models/TodoModel.js";
 import pool from "../config/Database.js"
 
 export const getTodos = (req, res) => {
@@ -15,25 +14,6 @@ export const getTodos = (req, res) => {
   }
 }
 
-// export const getTodos = (req, res) => {
-//     if(req.params.order){
-//         pool.query(`SELECT * FROM todo ORDER BY ${req.params.order}`, (error, results) => {
-//             if (error) throw error;
-//             res.status(200).json(results.rows)
-//         })
-//     }else if (req.params.filter){
-//         pool.query(`SELECT * FROM todo WHERE status=${req.params.filter}`, (error, results) =>{
-//             if (error) throw error
-//             res.status(200).json(results.rows)
-//         })
-//     }else{
-//         pool.query("SELECT * FROM todo", (error, results) => {
-//             if (error) throw error;
-//             res.status(200).json(results.rows)
-//         })
-//     }
-// }
-
 export const getTodoById = async (req, res) => {
     try {
       const result = await pool.query(`SELECT * FROM todo WHERE id=${req.params.id}`);
@@ -43,8 +23,6 @@ export const getTodoById = async (req, res) => {
       res.status(500).json({ error: "An error occurred while fetching the todo item." });
     }
 };
-  
-  
 
 export const createTodos = async (req, res) => {
     const { title, description, status, deadline, userid } = req.body;
@@ -96,4 +74,3 @@ export const deleteTodos = async (req, res) => {
       res.status(500).json({ error: "An error occurred while deleting the todo item." });
     }
 };
-  
