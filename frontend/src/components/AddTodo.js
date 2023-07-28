@@ -16,6 +16,10 @@ const TodoList = () => {
 
   const saveTodo = async (e) =>{
     e.preventDefault();
+    if (title.length > 5){
+      alert("Title terlalu panjang")
+      return;
+    }
     try {
       await axios.post('http://localhost:5000/todos',{
         title, 
@@ -25,12 +29,6 @@ const TodoList = () => {
         userid
       });
       navigate("/");
-
-      // console.log("title:", title);
-      // console.log("description:", description);
-      // console.log("deadline:", deadline);
-      // console.log("status:", status);
-      // console.log("userid:", userid);
 
     } catch (error) {
       console.log(error);
