@@ -42,6 +42,10 @@ const EditTodo = () => {
 
   const saveTodo = async (e) =>{
     e.preventDefault();
+    if (title.length > 50){
+      alert("Title terlalu banyak.")
+      return;
+    }
     try {
       await axios.patch(`http://localhost:5000/todos/${id}`,{
         title, 
@@ -76,6 +80,12 @@ const EditTodo = () => {
                     <div className="form-group mb-3">
                       <label htmlFor="titleInput" className="form-label">Todo Title</label>
                       <input type="text" className="form-control" id="titleInput" value={title} onChange={(e)=> settitle(e.target.value)} placeholder="E.g. completing my mathemathics tasks" />
+                        {/* Conditional rendering of the warning */}
+                      {title.length > 50 && (
+                        <p className="text-danger mt-1" style={{ display: "block" }}>
+                          Title maksimal 50 karakter.
+                        </p>
+                      )}
                     </div>
                     <div className="form-group mb-3">
                       <label htmlFor="descriptionInput" className="form-label">Todo Description</label>

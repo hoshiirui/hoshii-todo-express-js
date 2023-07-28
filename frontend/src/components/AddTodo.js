@@ -16,7 +16,7 @@ const TodoList = () => {
 
   const saveTodo = async (e) =>{
     e.preventDefault();
-    if (title.length > 5){
+    if (title.length > 50){
       alert("Title terlalu panjang")
       return;
     }
@@ -46,9 +46,24 @@ const TodoList = () => {
 
                   <form onSubmit={saveTodo}>
                     <div className="form-group mb-3">
-                      <label htmlFor="titleInput" className="form-label">Todo Title</label>
-                      <input type="text" className="form-control" id="titleInput" value={title} onChange={(e)=> settitle(e.target.value)} placeholder="E.g. completing my mathemathics tasks" />
-                    </div>
+                    <label htmlFor="titleInput" className="form-label">
+                      Todo Title
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="titleInput"
+                      value={title}
+                      onChange={(e) => settitle(e.target.value)}
+                      placeholder="E.g. completing my mathematics tasks"
+                    />
+                    {/* Conditional rendering of the warning */}
+                    {title.length > 50 && (
+                      <p className="text-danger mt-1" style={{ display: "block" }}>
+                        Title maksimal 50 karakter.
+                      </p>
+                    )}
+                  </div>
                     <div className="form-group mb-3">
                       <label htmlFor="descriptionInput" className="form-label">Todo Description</label>
                       <textarea className="form-control" id="descriptionInput" value={description} onChange={(e)=> setdescription(e.target.value)} rows={3} />
