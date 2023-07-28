@@ -2,23 +2,37 @@
 import pool from "../config/Database.js"
 
 export const getTodos = (req, res) => {
-    if(req.params.order){
-        pool.query(`SELECT * FROM todo ORDER BY ${req.params.order}`, (error, results) => {
-            if (error) throw error;
-            res.status(200).json(results.rows)
-        })
-    }else if (req.params.filter){
-        pool.query(`SELECT * FROM todo WHERE status=${req.params.filter}`, (error, results) =>{
-            if (error) throw error
-            res.status(200).json(results.rows)
-        })
-    }else{
-        pool.query("SELECT * FROM todo", (error, results) => {
-            if (error) throw error;
-            res.status(200).json(results.rows)
-        })
-    }
+  if(req.params.filter === '3'){
+    pool.query(`SELECT * FROM todo ORDER BY ${req.params.order}`, (error, results) => {
+      if (error) throw error
+      res.status(200).json(results.rows)
+    })
+  }else{
+    pool.query(`SELECT * FROM todo WHERE status=${req.params.filter} ORDER BY ${req.params.order}`, (error, results) => {
+      if (error) throw error
+      res.status(200).json(results.rows)
+    })
+  }
 }
+
+// export const getTodos = (req, res) => {
+//     if(req.params.order){
+//         pool.query(`SELECT * FROM todo ORDER BY ${req.params.order}`, (error, results) => {
+//             if (error) throw error;
+//             res.status(200).json(results.rows)
+//         })
+//     }else if (req.params.filter){
+//         pool.query(`SELECT * FROM todo WHERE status=${req.params.filter}`, (error, results) =>{
+//             if (error) throw error
+//             res.status(200).json(results.rows)
+//         })
+//     }else{
+//         pool.query("SELECT * FROM todo", (error, results) => {
+//             if (error) throw error;
+//             res.status(200).json(results.rows)
+//         })
+//     }
+// }
 
 export const getTodoById = async (req, res) => {
     try {
