@@ -5,13 +5,10 @@ export const refreshToken = async(req, res) => {
     try {
         const refreshToken = req.cookies.refreshToken;
         //lempar login
-        if(!refreshToken) return res.sendStatus(401);
-        // ini gunanya ada token ditaruh di db, bisa diilangin sih ini
-        // const user = await Users.findAll({
-        //     where: {
-        //         refresh_token: refreshToken
-        //     }
-        // })
+        if(!refreshToken){
+            console.log("Token not found!")
+            return res.sendStatus(401);
+        }
 
         const result = await pool.query('SELECT * FROM users WHERE refresh_token = $1', [refreshToken])
         const user = result.rows

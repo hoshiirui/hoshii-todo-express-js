@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react'
 import axios from "axios"
 import { Link } from 'react-router-dom'
-// import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import jwt_decode from 'jwt-decode'
 
 const TodoList = () => {
     //a little internal css
@@ -17,10 +18,33 @@ const TodoList = () => {
     const[todos, setTodos] = useState([])
     const[orderMode, setOrderMode] = useState("id")
     const[filterMode, setFilterMode] = useState(3)
+    const [name, setName] = useState("")
+    const [token, setToken] = useState("")
+    const [expire, setExpire] = useState("")
+    const history = useNavigate()
 
     useEffect(() => {
       sortTodo()
+      // refreshToken()
     }, [orderMode, filterMode]);
+
+    useEffect(() => {
+      refreshToken()
+    }, [])
+
+    const refreshToken = async() => {
+      try {
+          const response = await axios.get('http://localhost:5000/token')
+          setToken(response.data.accessToken)
+          const decoded = jwt_decode(response.data.accessToken)
+          setName(decoded.name)
+          setExpire(decoded.exp)
+      } catch (error) {
+          if(error.response){
+              history("/")
+          }
+      }
+    }
 
     const orderChange = (e) => {
       setOrderMode(e.target.value)
@@ -68,7 +92,9 @@ const TodoList = () => {
               <div className="card" style={{borderRadius: '15px'}}>
                 <div className="card-body p-5">
                   <h4 className="mb-3">Awesome Todo List</h4>
-
+                  <div className="form-group mb-3">
+                      <p>Welcome Back: {name}</p>
+                  </div>
                   <div className="form-group mb-3">
                     <label htmlFor="orderMode" className="form-label">Order By:</label>
                     <select className="form-control" id="orderMode" value={orderMode} onChange={orderChange}>
@@ -108,10 +134,10 @@ const TodoList = () => {
                                 <b>{todo.title}</b>: {todo.description}
                             </div>
                             <p>{deadlineTime}</p> {/* Display the extracted time */}
-                            <a href="#!" title="edit-todo">
+                            
                                 {/* <button className="btn btn-primary">More</button> */}
                                 <Link to={`edit/${todo.id}`} className="btn btn-primary">More</Link>
-                            </a>
+                            
                             </li>
                           );
                         }else if(todo.status === 2){
@@ -123,10 +149,10 @@ const TodoList = () => {
                                 <s><b>{todo.title}</b>: {todo.description}</s>
                             </div>
                             <p>{deadlineTime}</p> {/* Display the extracted time */}
-                            <a href="#!" title="edit-todo">
+                            
                                 {/* <button className="btn btn-primary">More</button> */}
                                 <Link to={`edit/${todo.id}`} className="btn btn-primary">More</Link>
-                            </a>
+                            
                             </li>
                           );
                         }else{
@@ -138,10 +164,10 @@ const TodoList = () => {
                                 <span style={customStyle}><b>{todo.title}</b>: {todo.description}</span>
                             </div>
                             <p>{deadlineTime}</p> {/* Display the extracted time */}
-                            <a href="#!" title="edit-todo">
+                            
                                 {/* <button className="btn btn-primary">More</button> */}
                                 <Link to={`edit/${todo.id}`} className="btn btn-primary">More</Link>
-                            </a>
+                            
                             </li>
                           );
                         }
