@@ -47,7 +47,7 @@ export const Login = async(req, res) => {
         
         //pembuatan acc token
         const accessToken = jwt.sign({userId, name, email}, process.env.ACCESS_TOKEN_SECRET, {
-            expiresIn: '20s'
+            expiresIn: '60s'
         })
         //pembuatan refresh token
         const refreshToken = jwt.sign({userId, name, email}, process.env.REFRESH_TOKEN_SECRET, {
@@ -55,7 +55,7 @@ export const Login = async(req, res) => {
         })
 
         const queryupdate = `UPDATE users SET refresh_token = $1 WHERE id = $2;`;
-        const values = [refreshToken, req.params.id];
+        const values = [refreshToken, userId];
         await pool.query(queryupdate, values);
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
@@ -69,16 +69,22 @@ export const Login = async(req, res) => {
     }
 }
 
-// export const getTodos = (req, res) => {
-//     if(req.params.filter === '3'){
-//       pool.query(`SELECT * FROM todo ORDER BY ${req.params.order}`, (error, results) => {
-//         if (error) throw error
-//         res.status(200).json(results.rows)
-//       })
-//     }else{
-//       pool.query(`SELECT * FROM todo WHERE status=${req.params.filter} ORDER BY ${req.params.order}`, (error, results) => {
-//         if (error) throw error
-//         res.status(200).json(results.rows)
-//       })
-//     }
-//   }
+export const Logout = async(req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+        //lempar login
+        if(!refreshToken) return res.sendStatus(204);
+        // ini gunanya ada token ditaruh di db, bisa diilangin sih ini
+        const result = await pool.query('SELECT * FROM users WHERE refresh_token = $1', [refreshToken])
+        const user = result.rows[0]
+        if(!user) return res.sendStatus(204);
+        const userId = user.id
+        // await Users.update({refresh_token: null}, {
+        //     where: {
+        //         id: userId
+        //     }
+        // })
+        const query = `UPDATE users SET refresh_token = null WHERE id = $1;`;
+        await pool.query(query, [userId]);
+        res.clearCookie('refreshToken')
+        return res.sendStatus(200);
+}
