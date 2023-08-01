@@ -2,12 +2,12 @@ import pool from "../config/Database.js"
 
 export const getTodos = (req, res) => {
   if(req.params.filter === '3'){
-    pool.query(`SELECT * FROM todo ORDER BY ${req.params.order}`, (error, results) => {
+    pool.query(`SELECT * FROM todo WHERE userid=${req.params.user} ORDER BY ${req.params.order}`, (error, results) => {
       if (error) throw error
       res.status(200).json(results.rows)
     })
   }else{
-    pool.query(`SELECT * FROM todo WHERE status=${req.params.filter} ORDER BY ${req.params.order}`, (error, results) => {
+    pool.query(`SELECT * FROM todo WHERE status=${req.params.filter} AND userid=${req.params.user} ORDER BY ${req.params.order}`, (error, results) => {
       if (error) throw error
       res.status(200).json(results.rows)
     })

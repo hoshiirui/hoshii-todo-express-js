@@ -18,33 +18,74 @@ const TodoList = () => {
     const[todos, setTodos] = useState([])
     const[orderMode, setOrderMode] = useState("id")
     const[filterMode, setFilterMode] = useState(3)
-    const [name, setName] = useState("")
+    const [name, setName] = useState("Shira")
     const [token, setToken] = useState("")
-    const [expire, setExpire] = useState("")
+    const [refToken, setRefToken] = useState("")
+    // const [expire, setExpire] = useState("")
+    const [userid, setUserid] = useState(3)
     const history = useNavigate()
-
+    
     useEffect(() => {
       sortTodo()
-      // refreshToken()
     }, [orderMode, filterMode]);
 
-    useEffect(() => {
-      refreshToken()
-    }, [])
+    const getCookieValue = (name) => {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    };    
 
-    const refreshToken = async() => {
+    const Logout = async() => {
       try {
-          const response = await axios.get('http://localhost:5000/token')
-          setToken(response.data.accessToken)
-          const decoded = jwt_decode(response.data.accessToken)
-          setName(decoded.name)
-          setExpire(decoded.exp)
+        await axios.delete('http://localhost:5000/logout')
+        history("/login")
       } catch (error) {
-          if(error.response){
-              history("/")
-          }
+        console.log(error)
+        
       }
     }
+
+    const getToken = () => {
+      const refreshTokenValue = getCookieValue('refreshToken');
+      const accessTokenValue = getCookieValue('accessToken');
+      console.log(`token get: ${accessTokenValue}`)
+      setRefToken(refreshTokenValue);
+      setToken(accessTokenValue);
+    }
+
+    // const refreshToken = async() => {
+    //   try {
+    //       const response = await axios.get('http://localhost:5000/token')
+    //       setToken(response.data.accessToken)
+    //       const decoded = jwt_decode(response.data.accessToken)
+    //       setName(decoded.name)
+    //       setExpire(decoded.exp)
+    //       setUserid(decoded.userId)
+    //       console.log(decoded)
+    //   } catch (error) {
+    //       if(error.response){
+    //           history("/login")
+    //       }
+    //   }
+    // }
+
+    // const axiosJWT = axios.create();
+
+    // axiosJWT.interceptors.request.use(async(config) => {
+    //   const currentDate = new Date();
+    //   if(expire * 1000 < currentDate.getTime()){
+    //     const response = await axios.get('http://localhost:5000/token');
+    //     config.headers.Authorization = `Bearer ${response.data.accessToken}`
+    //     setToken(response.data.accessToken)
+    //     const decoded = jwt_decode(response.data.accessToken)
+    //     setName(decoded.name)
+    //     setExpire(decoded.exp) 
+    //     setUserid(decoded.userId)
+    //   }
+    //   return config;
+    // }, (error) => {
+    //   return Promise.reject(error);
+    // })
 
     const orderChange = (e) => {
       setOrderMode(e.target.value)
@@ -56,7 +97,14 @@ const TodoList = () => {
     }
 
     const sortTodo = async () =>{
-      const response = await axios.get(`http://localhost:5000/todos/${orderMode}/${filterMode}`)
+      await getToken()
+      console.log(`Token ${token}`)
+      console.log(`Userid: ${userid}`)
+      const response = await axios.get(`http://localhost:5000/todos/${orderMode}/${filterMode}/${userid}`, {
+        header: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       setTodos(response.data)
     }
 
@@ -94,6 +142,7 @@ const TodoList = () => {
                   <h4 className="mb-3">Awesome Todo List</h4>
                   <div className="form-group mb-3">
                       <p>Welcome Back: {name}</p>
+                      <p>ID: {userid} </p>
                   </div>
                   <div className="form-group mb-3">
                     <label htmlFor="orderMode" className="form-label">Order By:</label>
@@ -178,7 +227,8 @@ const TodoList = () => {
                 </div>
                 <div className="card-footer text-end p-3">
                     {/* <button className="me-2 btn btn-link">Log Out</button> */}
-                    <Link to={`add`} className="btn btn-primary">Add Todo</Link>
+                    <button onClick={Logout} className="mx-1 btn btn-danger">Logout</button>
+                    <Link to={`add`} className="mx-2 btn btn-primary">Add Todo</Link>
                 </div>
               </div>
             </div>

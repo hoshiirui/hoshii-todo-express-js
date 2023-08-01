@@ -47,22 +47,22 @@ export const Login = async(req, res) => {
         
         //pembuatan acc token
         const accessToken = jwt.sign({userId, name, email}, process.env.ACCESS_TOKEN_SECRET, {
-            expiresIn: '60s'
+            expiresIn: '120s'
         })
         //pembuatan refresh token
         const refreshToken = jwt.sign({userId, name, email}, process.env.REFRESH_TOKEN_SECRET, {
             expiresIn: '1d'
         })
 
-        const queryupdate = `UPDATE users SET refresh_token = $1 WHERE id = $2;`;
-        const values = [refreshToken, userId];
-        await pool.query(queryupdate, values);
-        res.cookie('refreshToken', refreshToken, {
-            httpOnly: true,
-            maxAge: 24 * 60 * 60 * 1000
-            // secure: true
-        })
-        res.json({ accessToken })
+        // const queryupdate = `UPDATE users SET refresh_token = $1 WHERE id = $2;`;
+        // const values = [refreshToken, userId];
+        // await pool.query(queryupdate, values);
+        // res.cookie('refreshToken', refreshToken, {
+        //     httpOnly: true,
+        //     maxAge: 24 * 60 * 60 * 1000
+        //     // secure: true
+        // })
+        res.json({ accessToken, refreshToken })
     } catch (error) {
         res.status(404).json({msg:"Email not found!"})
         console.log(error)
