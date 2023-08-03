@@ -1,41 +1,37 @@
 import React, {useState} from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../provider/authProvider'
 
 const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [msg, setMsg] = useState("")
     const history = useNavigate()
-
-    const getCookieValue = (name) => {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop().split(';').shift();
-    };    
+    const { setToken } = useAuth();
 
     const Auth = async(e) => {
-        e.preventDefault();
-        try {
-            const response = await axios.post('http://localhost:5000/login', {
-                email: email,
-                password: password
-            })
-            console.log(response.data)
-            // Set cookies in the browser , http only cuma dari server side
-            document.cookie = `refreshToken=${response.data.refreshToken}; SameSite=Lax; max-age=86400`;
-            document.cookie = `accessToken=${response.data.accessToken}; SameSite=Lax; max-age=120`;
-            // const refreshTokenValue = getCookieValue('refreshToken');
-            // const accessTokenValue = getCookieValue('accessToken');
-            // console.log(refreshTokenValue);
-            // console.log(accessTokenValue);
+      console.log(e)
+      e.preventDefault();
+      try {
+          const result = await axios.post('http://localhost:5000/login', {
+              email: email,
+              password: password,
+          })
 
-            history("/")
-        } catch (error) {
-            if(error.response){
-                setMsg(error.response.data.msg)
-            }
-        }
+          document.cookie = `refreshToken=${result.data.refreshToken}; path=/;`
+          document.cookie = `accessToken=${result.data.accessToken}; path=/;`
+          console.log(document.cookie)
+          setToken(result.data.accessToken)
+
+          // history("/")
+          // console.log(result)
+      }
+      catch (error) {
+          if(error.response){
+              setMsg(error.response.data.msg)
+          }
+      }
     }
 
   return (

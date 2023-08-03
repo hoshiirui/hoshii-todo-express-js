@@ -3,6 +3,7 @@ import axios from "axios"
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import jwt_decode from 'jwt-decode'
+import { useAuth } from '../provider/authProvider'
 
 const TodoList = () => {
     //a little internal css
@@ -14,31 +15,40 @@ const TodoList = () => {
       color: 'green',
     };
 
+    const { token, setToken } = useAuth();
     // For Getting Data
     const[todos, setTodos] = useState([])
     const[orderMode, setOrderMode] = useState("id")
     const[filterMode, setFilterMode] = useState(3)
     const [name, setName] = useState("Shira")
-    const [token, setToken] = useState("")
+    // const [token, setToken] = useState("")
     const [refToken, setRefToken] = useState("")
     // const [expire, setExpire] = useState("")
-    const [userid, setUserid] = useState(3)
+    const [userid, setUserid] = useState(1)
     const history = useNavigate()
     
     useEffect(() => {
-      getToken()
+      // getToken()
       sortTodo()
     }, [orderMode, filterMode]);
 
-    const getCookieValue = (name) => {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop().split(';').shift();
-    };    
+    // const getCookieValue = (name) => {
+    //   const value = `; ${document.cookie}`;
+    //   const parts = value.split(`; ${name}=`);
+    //   if (parts.length === 2) return parts.pop().split(';').shift();
+    // };    
 
     const Logout = async() => {
       try {
-        await axios.delete('http://localhost:5000/logout')
+        await axios.delete('http://localhost:5000/logout', {
+          headers: {
+            Authorization: `Bearer ${token.split(";")[0]}`
+          }
+        })
+        delete axios.defaults.headers.common["Authorization"];
+        document.cookie = `accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+        document.cookie = `refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+
         history("/login")
       } catch (error) {
         console.log(error)
@@ -46,14 +56,12 @@ const TodoList = () => {
       }
     }
 
-    const getToken = () => {
-      const refreshTokenValue = getCookieValue('refreshToken');
-      const accessTokenValue = getCookieValue('accessToken');
-      console.log(`token get in func: ${accessTokenValue}`)
-      setRefToken(refreshTokenValue);
-      setToken(accessTokenValue);
-      console.log(`token get in state: ${token}`)
-    }
+    // const getToken = () => {
+    //   const refreshTokenValue = getCookieValue('refreshToken');
+    //   const accessTokenValue = getCookieValue('accessToken');
+    //   setRefToken(refreshTokenValue);
+    //   setToken(accessTokenValue);
+    // }
 
     // const refreshToken = async() => {
     //   try {
@@ -99,9 +107,6 @@ const TodoList = () => {
     }
 
     const sortTodo = async () =>{
-      await getToken()
-      console.log(`Token ${token}`)
-      console.log(`Userid: ${userid}`)
       const response = await axios.get(`http://localhost:5000/todos/${orderMode}/${filterMode}/${userid}`, {
         header: {
           Authorization: `Bearer ${token}`
