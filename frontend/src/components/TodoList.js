@@ -27,8 +27,8 @@ const TodoList = () => {
     
     useEffect(() => {
       getToken()
-      // sortTodo()
-    }, [orderMode, filterMode, token]);
+      sortTodo()
+    }, [orderMode, filterMode]);
 
     const getCookieValue = (name) => {
       const value = `; ${document.cookie}`;
@@ -134,8 +134,14 @@ const TodoList = () => {
       }
     }
 
+    const clickbtn = async() => {
+      console.log(`hasil pencet: ${token}`)
+      sortTodo()
+    }
+
   return (
     <section className="vh-100" style={{backgroundColor: '#e2d5de'}}>
+      <button type="button" onClick={clickbtn} className="mx-1 btn btn-danger">Oi Token</button>
         <div className="container py-5 h-100">
           <div className="row d-flex justify-content-center align-items-center h-100">
             <div className="col col-xl-10">
