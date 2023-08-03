@@ -26,8 +26,9 @@ const TodoList = () => {
     const history = useNavigate()
     
     useEffect(() => {
-      sortTodo()
-    }, [orderMode, filterMode]);
+      getToken()
+      // sortTodo()
+    }, [orderMode, filterMode, token]);
 
     const getCookieValue = (name) => {
       const value = `; ${document.cookie}`;
@@ -48,9 +49,10 @@ const TodoList = () => {
     const getToken = () => {
       const refreshTokenValue = getCookieValue('refreshToken');
       const accessTokenValue = getCookieValue('accessToken');
-      console.log(`token get: ${accessTokenValue}`)
+      console.log(`token get in func: ${accessTokenValue}`)
       setRefToken(refreshTokenValue);
       setToken(accessTokenValue);
+      console.log(`token get in state: ${token}`)
     }
 
     // const refreshToken = async() => {

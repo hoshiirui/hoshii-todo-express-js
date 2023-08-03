@@ -11,7 +11,7 @@ const router = express.Router();
 router.post('/users', Register);
 router.post('/login', Login);
 router.delete('/logout', Logout)
-router.get('/users', verifyToken, getUsers)
+router.get('/users', getUsers)
 router.get('/token', verifyTokenRefresh, refreshToken)
 
 //verif nya pake verifyToken secret untuk refreshtoken
