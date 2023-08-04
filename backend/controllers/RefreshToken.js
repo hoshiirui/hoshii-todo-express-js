@@ -3,10 +3,11 @@ import pool from "../config/Database.js"
 
 export const refreshToken = async(req, res) => {
     try {
-        const refreshToken = req.cookies.refreshToken;
+        const authHeader = req.headers['authorization'];
+        const refreshToken = authHeader && authHeader.split(' ')[1]
         //lempar login
         if(!refreshToken){
-            console.log("Token not found!")
+            console.log("Token not found!") 
             return res.sendStatus(401);
         }
 

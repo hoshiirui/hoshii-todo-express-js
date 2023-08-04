@@ -37,6 +37,8 @@ const AuthProvider = ({ children }) => {
     } else {
       delete axios.defaults.headers.common["Authorization"];
       delete document.cookie;
+      // new line
+      
     }
   }, [credentials]);
 
