@@ -15,7 +15,7 @@ const TodoList = () => {
     color: "green",
   };
 
-  const { credentials, resetToken} = useAuth();
+  const { credentials, resetToken, setToken} = useAuth();
   // For Getting Data
   const [todos, setTodos] = useState([]);
   const [orderMode, setOrderMode] = useState("id");
@@ -41,7 +41,13 @@ const TodoList = () => {
       }
     };
     fetchTodos();
-  }, [credentials]);
+  }, [credentials, orderMode,  filterMode]);
+
+  useEffect(() => {
+    const decoded = jwt_decode(credentials.accessToken)
+    setName(decoded.name)
+    setUserid(decoded.userId)
+  }, [])
 
   const Logout = async () => {
     try {
@@ -145,7 +151,8 @@ const TodoList = () => {
       });
       sortTodo();
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      console.log("anj error")
     }
   };
 

@@ -4,7 +4,11 @@ import { useAuth } from "../provider/authProvider";
 
 const PrivateRoutes = () => {
   const { credentials } = useAuth();
-  return credentials.accessToken ? <Outlet /> : <Navigate to="/login" />;
+  if (credentials.accessToken) {
+    return <Outlet />;
+  } else {
+    return <Navigate to="/login" />;
+  }  
 };
 
 export default PrivateRoutes;

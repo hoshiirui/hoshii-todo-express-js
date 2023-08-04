@@ -47,7 +47,7 @@ export const Login = async(req, res) => {
         
         //pembuatan acc token
         const accessToken = jwt.sign({userId, name, email}, process.env.ACCESS_TOKEN_SECRET, {
-            expiresIn: '120s'
+            expiresIn: '5s'
         })
         //pembuatan refresh token
         const refreshToken = jwt.sign({userId, name, email}, process.env.REFRESH_TOKEN_SECRET, {
