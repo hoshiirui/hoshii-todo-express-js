@@ -48,7 +48,7 @@ const TodoList = () => {
     const decoded = jwt_decode(credentials.accessToken)
     setName(decoded.name)
     setUserid(decoded.userId)
-  }, [credentials])
+  }, [])
 
   const Logout = async () => {
     try {
