@@ -27,7 +27,7 @@ export const getTodoById = async (req, res) => {
       const result = await pool.query(`SELECT * FROM todo WHERE id=${req.params.id}`);
       res.status(200).json(result.rows);
     } catch (error) {
-      console.error("Error occurred while fetching the todo item:", error);
+      console.error("Error occurred while fetching the todo item:", error.message);
       res.status(500).json({ error: "An error occurred while fetching the todo item." });
     }
 };
@@ -44,7 +44,7 @@ export const createTodos = async (req, res) => {
       await pool.query(query, values);
       res.status(201).json({ msg: 'Todo created!' });
     } catch (error) {
-      console.error("Error occurred while creating the todo item:", error);
+      console.error("Error occurred while creating the todo item:", error.message);
       res.status(500).json({ error: "An error occurred while creating the todo item." });
     }
 };
@@ -67,7 +67,7 @@ export const updateTodos = async (req, res) => {
       await pool.query(query, values);
       res.status(200).json({ msg: 'Todo updated!' });
     } catch (error) {
-      console.error("Error occurred while updating the todo item:", error);
+      console.error("Error occurred while updating the todo item:", error.message);
       res.status(500).json({ error: "An error occurred while updating the todo item." });
     }
 };
