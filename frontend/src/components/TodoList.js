@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import dayjs from "dayjs"
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
@@ -27,7 +28,7 @@ const TodoList = () => {
   useEffect(() => {
     const fetchTodos = async () => {
       try {
-        const response = await axios.get(
+        const response = await axiosJWT.get(
           `http://localhost:5000/todos/${orderMode}/${filterMode}/${userid}`,
           {
             headers: {
@@ -47,7 +48,7 @@ const TodoList = () => {
     const decoded = jwt_decode(credentials.accessToken)
     setName(decoded.name)
     setUserid(decoded.userId)
-  }, [])
+  }, [credentials])
 
   const Logout = async () => {
     try {
@@ -85,7 +86,24 @@ const TodoList = () => {
     //   }
     // }
 
-    // const axiosJWT = axios.create();
+    const axiosJWT = axios.create();
+
+    axiosJWT.interceptors.request.use(async req => {
+      const decoded = jwt_decode(credentials.accessToken)
+      const isExpired = dayjs.unix(decoded.exp).diff(dayjs()) < 1;
+      console.log('isExpired: ', isExpired)
+      if(!isExpired) return req
+
+      const result = await axios.get("http://localhost:5000/token", {
+        headers: {
+          Authorization: `Bearer ${credentials.refreshToken}`,
+        },
+      });
+      console.log(result.data)
+      setToken(result.data.accessToken, credentials.refreshToken)
+
+      return req
+    })
 
     // axiosJWT.interceptors.request.use(async(config) => {
     //   const currentDate = new Date();
@@ -142,7 +160,7 @@ const TodoList = () => {
         status = 0;
       }
       console.log(title);
-      await axios.patch(`http://localhost:5000/todos/${id}`, {
+      await axiosJWT.patch(`http://localhost:5000/todos/${id}`, {
         title,
         description,
         status,
