@@ -5,10 +5,14 @@ import 'react-datetime-picker/dist/DateTimePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import 'react-clock/dist/Clock.css';
 import DateTimePicker from 'react-datetime-picker'
+import jwt_decode from "jwt-decode";
+import dayjs from "dayjs"
+import { useAuth } from "../provider/authProvider";
 
 
 
 const EditTodo = () => {
+  const { credentials, resetToken, setToken} = useAuth();
   const [title, settitle] = useState("");
   const [description, setdescription] = useState("");
   const [deadline, setdeadline] = useState(new Date());
@@ -20,10 +24,29 @@ const EditTodo = () => {
   useEffect(() => {
     getTodoById()
   }, [])
+
+  const axiosJWT = axios.create();
+
+  axiosJWT.interceptors.request.use(async req => {
+    const decoded = jwt_decode(credentials.accessToken)
+    const isExpired = dayjs.unix(decoded.exp).diff(dayjs()) < 1;
+    console.log('isExpired: ', isExpired)
+    if(!isExpired) return req
+
+    const result = await axios.get("http://localhost:5000/token", {
+      headers: {
+        Authorization: `Bearer ${credentials.refreshToken}`,
+      },
+    });
+    console.log(result.data)
+    setToken(result.data.accessToken, credentials.refreshToken)
+
+    return req
+  })
   
   const deleteTodo = async (id) =>{
     try {
-      await axios.delete(`http://localhost:5000/todos/${id}`)
+      await axiosJWT.delete(`http://localhost:5000/todos/${id}`)
       navigate("/");
     } catch (error) {
       console.log(error)
@@ -31,7 +54,7 @@ const EditTodo = () => {
   }
 
   const getTodoById = async () =>{
-    const response = await axios.get(`http://localhost:5000/todos/${id}`)
+    const response = await axiosJWT.get(`http://localhost:5000/todos/${id}`)
     const data = response.data[0]
     settitle(data.title)
     setdescription(data.description)
@@ -47,7 +70,7 @@ const EditTodo = () => {
       return;
     }
     try {
-      await axios.patch(`http://localhost:5000/todos/${id}`,{
+      await axiosJWT.patch(`http://localhost:5000/todos/${id}`,{
         title, 
         description, 
         status,
