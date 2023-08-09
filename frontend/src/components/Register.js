@@ -1,25 +1,54 @@
 import React, {useState} from 'react'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 const Register = () => {
+    const buttonSpace = {
+      marginRight: "1rem",
+    };
+
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confPassword, setConfPassword] = useState('')
     const [msg, setMsg] = useState("")
+    const [file, setFile] = useState("")
+    const [preview, setPreview] = useState("")
     const history = useNavigate()
+
+    const loadImage = (e) => {
+      const image = e.target.files[0]
+      setFile(image);
+      setPreview(URL.createObjectURL(image));
+    }
 
     const Register = async(e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/users', {
-                name: name,
-                email: email,
-                password: password,
-                confPassword: confPassword
-            })
-            history("/login")
+            if(preview){
+              const formData = new FormData();
+              formData.append("name", name);
+              formData.append("email", email);
+              formData.append("password", password);
+              formData.append("confPassword", confPassword);
+              formData.append("file", file);
+              console.log(file)
+              await axios.post('http://localhost:5000/users', formData, {
+                headers:{
+                  "Content-Type": "multipart/form-data"
+                }
+              })
+            }else{
+              await axios.post('http://localhost:5000/users', {
+                  name: name,
+                  email: email,
+                  password: password,
+                  confPassword: confPassword, 
+                  file: null
+              })
+            }
+            // history("/login").
+            console.log(preview)
         } catch (error) {
             if(error.response){
                 setMsg(error.response.data.msg)
@@ -56,12 +85,24 @@ const Register = () => {
                       <label htmlFor="confPasswordInput" className="form-label">Confirm Password</label>
                       <input type="password" onChange={(e) => setConfPassword(e.target.value)} value={confPassword} className="form-control" />
                     </div>
+                    <div className="form-group mb-3">
+                      <label htmlFor="fileInput" className="form-label">Profile Picture (Optional)</label>
+                      <input type="file" className="form-control" onChange={loadImage}/>
+                    </div>
                     <p className="text-danger mt-1" style={{ display: "block" }}>
                           {msg}
                     </p>
                     <div className="form-group mb-3">
-                        <button type="submit" className="btn btn-primary">Login</button>
+                        <button type="submit" className="btn btn-primary" style={buttonSpace}>Register</button>
+                        <Link to={`../login`} className="btn btn-outline-primary">Login</Link>
                     </div>
+                    {preview?(
+                      <figure>
+                        <img src={preview} alt='Preview image' className='w-128 h-128'></img>
+                      </figure>
+                    ): (
+                      ""
+                    )}
                   </form>
 
                 </div>

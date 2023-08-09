@@ -49,8 +49,12 @@ const TodoList = () => {
     const decoded = jwt_decode(credentials.accessToken)
     setName(decoded.name)
     setUserid(decoded.userId)
-    setUrl(decoded.url)
-    // console.log(decoded)
+    if(decoded.url != null){
+      setUrl(decoded.url)
+    }else{
+      setUrl("http://localhost:5000/images/a083450jterpwerb7a966828c5c988fcb.png")
+    }
+    console.log(decoded)
   }, [])
 
   const Logout = async () => {
@@ -146,7 +150,7 @@ const TodoList = () => {
               <div className="card-body p-5">
                 <span className="text-center">
                   <div className="mt-3 mb-4">
-                    <img src={url} className="rounded-circle img-fluid" style={{width: '100px'}} />
+                    <img src={url} className="rounded-circle img-fluid" style={{width: '100px'}}/>
                   </div>
                   <h4 className="mb-2">{name}</h4>
                   <p className="text-muted mb-4">UserID: {userid} <span className="mx-2">|</span> <a href="#!">Edit Profile</a></p>

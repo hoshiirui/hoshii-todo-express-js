@@ -2,8 +2,13 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
+import { Link } from "react-router-dom"
 
 const Login = () => {
+  const buttonSpace = {
+    marginRight: "1rem",
+  };
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
@@ -62,9 +67,9 @@ const Login = () => {
                     {msg}
                   </p>
                   <div className="form-group mb-3">
-                    <button type="submit" className="btn btn-primary">
-                      Login
-                    </button>
+                    <button type="submit" className="btn btn-primary"  style={buttonSpace}>Login</button>
+                    {/* <button type="button" className="btn btn-primary">Register</button> */}
+                    <Link to={`../register`} className="btn btn-outline-primary">Register</Link>
                   </div>
                 </form>
               </div>

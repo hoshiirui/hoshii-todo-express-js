@@ -16,18 +16,6 @@ export const getUsers = async(req, res) => {
 }
 
 export const Register = async(req, res) => {
-    if(req.file === null) return res.status(400).json({msg: "No file uploaded"})
-    const file = req.files.file
-    const fileSize = file.data.length
-    const ext = path.extname(file.name)
-    const fileName = file.md5 + ext
-    const url = `${req.protocol}://${req.get("host")}/images/${fileName}`
-    const allowedType = ['.png', '.jpg', '.jpeg']
-
-    if(!allowedType.includes(ext.toLowerCase())) return res.status(422).json({msg: "Invalid image format"})
-    if(fileSize > 5000000) return res.status(422).json({msg: "Invalid must be less than 5 MB"})
-
-    // const {name, email, password, confPassword} = req.body;
     const name = req.body.name
     const email = req.body.email
     const password = req.body.password
@@ -36,21 +24,48 @@ export const Register = async(req, res) => {
     const salt = await bcrypt.genSalt()
     const hashPassword = await bcrypt.hash(password, salt)
 
-    const query = `
-      INSERT INTO users (name, email, password, image, url)
-      VALUES ($1, $2, $3, $4, $5)
-    `;
-    const values = [name, email, hashPassword, fileName, url];
-
-    file.mv(`./public/images/${fileName}`, async(err) => {
-        if(err) return res.status(500).json({msg: err.message})
+    if(req.file == null){
+        // return res.status(400).json({msg: "No file uploaded"})
+        const query = `
+        INSERT INTO users (name, email, password)
+        VALUES ($1, $2, $3)
+        `;
+        const values = [name, email, hashPassword];
         try {
             await pool.query(query, values);
             res.status(200).json({msg: "Register berhasil!"})
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
-    })
+    }else{
+        const file = req.files.file
+        const fileSize = file.data.length
+        const ext = path.extname(file.name)
+        const fileName = file.md5 + ext
+        const url = `${req.protocol}://${req.get("host")}/images/${fileName}`
+        const allowedType = ['.png', '.jpg', '.jpeg']
+
+        if(!allowedType.includes(ext.toLowerCase())) return res.status(422).json({msg: "Invalid image format"})
+        if(fileSize > 5000000) return res.status(422).json({msg: "Invalid must be less than 5 MB"})
+
+        // const {name, email, password, confPassword} = req.body;
+
+        const query = `
+        INSERT INTO users (name, email, password, image, url)
+        VALUES ($1, $2, $3, $4, $5)
+        `;
+        const values = [name, email, hashPassword, fileName, url];
+
+        file.mv(`./public/images/${fileName}`, async(err) => {
+            if(err) return res.status(500).json({msg: err.message})
+            try {
+                await pool.query(query, values);
+                res.status(200).json({msg: "Register berhasil!"})
+            } catch (error) {
+                console.log(error.message)
+            }
+        })
+    }
 }
 
 export const Login = async(req, res) => {
