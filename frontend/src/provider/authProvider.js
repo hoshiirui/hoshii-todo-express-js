@@ -33,7 +33,7 @@ const AuthProvider = ({ children }) => {
       axios.defaults.headers.common["Authorization"] =
         "Bearer " + credentials.accessToken;
       document.cookie = `refreshToken=${credentials.refreshToken}; path=/; SameSite=Lax; max-age=86400`;
-      document.cookie = `accessToken=${credentials.accessToken}; path=/;  SameSite=Lax; max-age=20`;
+      document.cookie = `accessToken=${credentials.accessToken}; path=/;  SameSite=Lax; max-age=86400`;
     } else {
       delete axios.defaults.headers.common["Authorization"];
       delete document.cookie;

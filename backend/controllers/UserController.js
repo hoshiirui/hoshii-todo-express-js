@@ -66,13 +66,14 @@ export const Login = async(req, res) => {
         const userId = user.id
         const name = user.name
         const email = user.email
+        const url = user.url
         
         //pembuatan acc token
-        const accessToken = jwt.sign({userId, name, email}, process.env.ACCESS_TOKEN_SECRET, {
-            expiresIn: '30s'
+        const accessToken = jwt.sign({userId, name, email, url}, process.env.ACCESS_TOKEN_SECRET, {
+            expiresIn: '1d'
         })
         //pembuatan refresh token
-        const refreshToken = jwt.sign({userId, name, email}, process.env.REFRESH_TOKEN_SECRET, {
+        const refreshToken = jwt.sign({userId, name, email, url}, process.env.REFRESH_TOKEN_SECRET, {
             expiresIn: '1d'
         })
         res.json({ accessToken, refreshToken })

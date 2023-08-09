@@ -22,7 +22,8 @@ const TodoList = () => {
   const [orderMode, setOrderMode] = useState("id");
   const [filterMode, setFilterMode] = useState(3);
   const [name, setName] = useState("Shira");
-  const [userid, setUserid] = useState(1);
+  const [url, setUrl] = useState("Gusnan goblkok");
+  const [userid, setUserid] = useState(jwt_decode(credentials.accessToken).userId);
   const history = useNavigate();
 
   useEffect(() => {
@@ -48,6 +49,8 @@ const TodoList = () => {
     const decoded = jwt_decode(credentials.accessToken)
     setName(decoded.name)
     setUserid(decoded.userId)
+    setUrl(decoded.url)
+    // console.log(decoded)
   }, [])
 
   const Logout = async () => {
@@ -141,14 +144,14 @@ const TodoList = () => {
           <div className="col col-xl-10">
             <div className="card" style={{ borderRadius: "15px" }}>
               <div className="card-body p-5">
-                <p>Uso darakede</p>
-              </div>
-              <div className="card-body p-5">
-                <h4 className="mb-3">Awesome Todo List</h4>
-                <div className="form-group mb-3">
-                  <p>Welcome Back: {name}</p>
-                  <p>ID: {userid} </p>
-                </div>
+                <span className="text-center">
+                  <div className="mt-3 mb-4">
+                    <img src={url} className="rounded-circle img-fluid" style={{width: '100px'}} />
+                  </div>
+                  <h4 className="mb-2">{name}</h4>
+                  <p className="text-muted mb-4">UserID: {userid} <span className="mx-2">|</span> <a href="#!">Edit Profile</a></p>
+                  <h4 className="mb-3">Awesome Todo List</h4>
+                </span>
                 <div className="form-group mb-3">
                   <label htmlFor="orderMode" className="form-label">
                     Order By:
