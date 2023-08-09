@@ -52,40 +52,16 @@ const TodoList = () => {
 
   const Logout = async () => {
     try {
-      await axios.delete("http://localhost:5000/logout", {
-        headers: {
-          Authorization: `Bearer ${credentials.accessToken}`,
-        },
-      });
+      // await axios.delete("http://localhost:5000/logout", {
+      //   headers: {
+      //     Authorization: `Bearer ${credentials.accessToken}`,
+      //   },
+      // });
       resetToken();
     } catch (error) {
       console.log(error);
     }
   };
-
-  // const getToken = () => {
-    //   const refreshTokenValue = getCookieValue('refreshToken');
-    //   const accessTokenValue = getCookieValue('accessToken');
-    //   setRefToken(refreshTokenValue);
-    //   setToken(accessTokenValue);
-    // }
-
-    // const refreshToken = async() => {
-    //   try {
-    //       const response = await axios.get('http://localhost:5000/token')
-    //       setToken(response.data.accessToken)
-    //       const decoded = jwt_decode(response.data.accessToken)
-    //       setName(decoded.name)
-    //       setExpire(decoded.exp)
-    //       setUserid(decoded.userId)
-    //       console.log(decoded)
-    //   } catch (error) {
-    //       if(error.response){
-    //           history("/login")
-    //       }
-    //   }
-    // }
-
     const axiosJWT = axios.create();
 
     axiosJWT.interceptors.request.use(async req => {
@@ -104,22 +80,6 @@ const TodoList = () => {
 
       return req
     })
-
-    // axiosJWT.interceptors.request.use(async(config) => {
-    //   const currentDate = new Date();
-    //   if(expire * 1000 < currentDate.getTime()){
-    //     const response = await axios.get('http://localhost:5000/token');
-    //     config.headers.Authorization = `Bearer ${response.data.accessToken}`
-    //     setToken(response.data.accessToken)
-    //     const decoded = jwt_decode(response.data.accessToken)
-    //     setName(decoded.name)
-    //     setExpire(decoded.exp) 
-    //     setUserid(decoded.userId)
-    //   }
-    //   return config;
-    // }, (error) => {
-    //   return Promise.reject(error);
-    // })
 
   const orderChange = (e) => {
     setOrderMode(e.target.value);
@@ -180,6 +140,9 @@ const TodoList = () => {
         <div className="row d-flex justify-content-center align-items-center h-100">
           <div className="col col-xl-10">
             <div className="card" style={{ borderRadius: "15px" }}>
+              <div className="card-body p-5">
+                <p>Uso darakede</p>
+              </div>
               <div className="card-body p-5">
                 <h4 className="mb-3">Awesome Todo List</h4>
                 <div className="form-group mb-3">
