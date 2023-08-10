@@ -46,11 +46,25 @@ const TodoList = () => {
   }, [credentials, orderMode,  filterMode]);
 
   useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axiosJWT.get(`http://localhost:5000/users/${userid}`, {
+          headers: {
+            Authorization: `Bearer ${credentials.accessToken}`,
+          },
+        })
+        const data = response.data[0]
+        setName(data.name)
+        setUrl(data.url)
+      } catch (error) {
+        console.log(error)
+      }
+    }
     const decoded = jwt_decode(credentials.accessToken)
-    setName(decoded.name)
     setUserid(decoded.userId)
-    if(decoded.url != null){
-      setUrl(decoded.url)
+    fetchUsers()
+    if(url != null){
+      console.log("There's image")
     }else{
       setUrl("http://localhost:5000/images/a083450jterpwerb7a966828c5c988fcb.png")
     }
