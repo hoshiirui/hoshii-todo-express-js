@@ -56,7 +56,7 @@ const EditUser = () => {
                   file: null
               })
             }
-            history("/login")
+            history("/")
             // console.log(preview)
         } catch (error) {
             if(error.response){

@@ -25,6 +25,54 @@ export const getUserById = async (req, res) => {
     }
 }
 
+export const updateUser = async(req, res) => {
+    const name = req.body.name
+    const email = req.body.email
+    try {
+        console.log(req.files.file)
+        const file = req.files.file
+        const fileSize = file.data.length
+        const ext = path.extname(file.name)
+        const fileName = file.md5 + ext
+        const url = `${req.protocol}://${req.get("host")}/images/${fileName}`
+        const allowedType = ['.png', '.jpg', '.jpeg']
+
+        if(!allowedType.includes(ext.toLowerCase())) return res.status(422).json({msg: "Invalid image format"})
+        if(fileSize > 5000000) return res.status(422).json({msg: "Invalid must be less than 5 MB"})
+
+        // const {name, email, password, confPassword} = req.body;
+
+        const query = `
+        UPDATE users SET name = $1, email = $2, image = $3, url = $4 WHERE id = $5;
+        `;
+        const values = [name, email, fileName, url, req.params.id];
+
+        file.mv(`./public/images/${fileName}`, async(err) => {
+            if(err) return res.status(500).json({msg: err.message})
+            try {
+                await pool.query(query, values);
+                // console.log(values)
+                // console.log("register berhasil isi file")
+                res.status(200).json({msg: "Update berhasil!"})
+            } catch (error) {
+                console.log(error.message)
+            }
+        })
+    } catch (error) {
+        const query = `
+        UPDATE users SET name = $1, email = $2 WHERE id = $3;
+        `;
+        const values = [name, email, req.params.id];
+        try {
+            await pool.query(query, values);
+            // console.log("Register berhasil ga isi file")
+            res.status(200).json({msg: "Update berhasil!"})
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
+
 export const Register = async(req, res) => {
     const name = req.body.name
     const email = req.body.email

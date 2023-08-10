@@ -1,5 +1,5 @@
 import express from "express";
-import { Login, Logout, Register, getUserById, getUsers } from "../controllers/UserController.js";
+import { Login, Logout, Register, getUserById, getUsers, updateUser } from "../controllers/UserController.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
 import { verifyTokenRefresh } from "../middleware/verifyTokenRefresh.js";
@@ -13,6 +13,7 @@ router.post('/login', Login);
 router.delete('/logout', Logout)
 router.get('/users', getUsers)
 router.get('/users/:id', getUserById)
+router.patch('/users/:id', updateUser)
 router.get('/token', verifyTokenRefresh, refreshToken)
 
 //verif nya pake verifyToken secret untuk refreshtoken

@@ -153,7 +153,7 @@ const TodoList = () => {
                     <img src={url} className="rounded-circle img-fluid" style={{width: '100px'}}/>
                   </div>
                   <h4 className="mb-2">{name}</h4>
-                  <p className="text-muted mb-4">UserID: {userid} <span className="mx-2">|</span> <a href="#!">Edit Profile</a></p>
+                  <p className="text-muted mb-4">UserID: {userid} <span className="mx-2">|</span> <Link to={`edituser/${userid}`}>Edit Profile</Link></p>
                   <h4 className="mb-3">Awesome Todo List</h4>
                 </span>
                 <div className="form-group mb-3">
