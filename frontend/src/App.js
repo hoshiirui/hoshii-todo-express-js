@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AuthProvider from "./provider/authProvider";
 import PrivateRoutes from "./routes/private.route";
 import { PublicRoutes } from "./routes/public.route";
+import EditUser from "./components/EditUser";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="/" element={<TodoList />} />
             <Route path="/add" element={<AddTodo />} />
             <Route path="/edit/:id" element={<EditTodo />} />
+            <Route path="/edituser/:id" element={<EditUser />} />
           </Route>
           <Route path="/" element={<PublicRoutes />}>
             <Route path="/login" element={<Login />} />

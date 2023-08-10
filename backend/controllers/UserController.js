@@ -15,6 +15,16 @@ export const getUsers = async(req, res) => {
     }
 }
 
+export const getUserById = async (req, res) => {
+    try {
+        const result = await pool.query(`SELECT * FROM users WHERE id=${req.params.id}`);
+        res.status(200).json(result.rows)
+    } catch (error) {
+        console.error("Error occurred while fetching the user information:", error.message);
+        res.status(500).json({ error: "An error occurred while fetching the user information." });
+    }
+}
+
 export const Register = async(req, res) => {
     const name = req.body.name
     const email = req.body.email
