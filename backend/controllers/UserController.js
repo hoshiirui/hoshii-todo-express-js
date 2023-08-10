@@ -23,21 +23,12 @@ export const Register = async(req, res) => {
     if(password !== confPassword) return res.status(400).json({msg: "Password didn't match!"})
     const salt = await bcrypt.genSalt()
     const hashPassword = await bcrypt.hash(password, salt)
+    // console.log(req.body)
+    // console.log(req.files.file)
+    // console.log(req.headers)
 
-    if(req.file == null){
-        // return res.status(400).json({msg: "No file uploaded"})
-        const query = `
-        INSERT INTO users (name, email, password)
-        VALUES ($1, $2, $3)
-        `;
-        const values = [name, email, hashPassword];
-        try {
-            await pool.query(query, values);
-            res.status(200).json({msg: "Register berhasil!"})
-        } catch (error) {
-            console.log(error)
-        }
-    }else{
+    try {
+        console.log(req.files.file)
         const file = req.files.file
         const fileSize = file.data.length
         const ext = path.extname(file.name)
@@ -60,11 +51,26 @@ export const Register = async(req, res) => {
             if(err) return res.status(500).json({msg: err.message})
             try {
                 await pool.query(query, values);
+                // console.log(values)
+                // console.log("register berhasil isi file")
                 res.status(200).json({msg: "Register berhasil!"})
             } catch (error) {
                 console.log(error.message)
             }
         })
+    } catch (error) {
+        const query = `
+        INSERT INTO users (name, email, password)
+        VALUES ($1, $2, $3)
+        `;
+        const values = [name, email, hashPassword];
+        try {
+            await pool.query(query, values);
+            // console.log("Register berhasil ga isi file")
+            res.status(200).json({msg: "Register berhasil!"})
+        } catch (error) {
+            console.log(error)
+        }
     }
 }
 

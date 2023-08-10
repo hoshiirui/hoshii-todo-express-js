@@ -31,6 +31,7 @@ const Register = () => {
               formData.append("email", email);
               formData.append("password", password);
               formData.append("confPassword", confPassword);
+              // formData.append("varTest", "lalala")
               formData.append("file", file);
               console.log(file)
               await axios.post('http://localhost:5000/users', formData, {
@@ -47,8 +48,8 @@ const Register = () => {
                   file: null
               })
             }
-            // history("/login").
-            console.log(preview)
+            history("/login")
+            // console.log(preview)
         } catch (error) {
             if(error.response){
                 setMsg(error.response.data.msg)
@@ -65,7 +66,7 @@ const Register = () => {
                 <div className="card-body p-5">
 
                   <h4 className="mb-3">Register</h4>
-                  <form onSubmit={ Register }>
+                  <form onSubmit={ Register } encType="multipart/form-data">
                     <div className="form-group mb-3">
                       <p>Kindly fill this form to start using our to-do list!</p>
                     </div>
