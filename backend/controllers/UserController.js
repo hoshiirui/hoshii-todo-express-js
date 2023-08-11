@@ -25,6 +25,27 @@ export const getUserById = async (req, res) => {
     }
 }
 
+export const deleteUser = async (req, res) => {
+    try {
+        const result = await pool.query(`SELECT * FROM users WHERE id=${req.params.id}`);
+        if(result.rowCount == 0) return res.status(404).json({msg: "User not found!"})
+        try {
+            if(result.rows[0].image){
+                const filepath = `./public/images/${result.rows[0].image}`
+                // console.log(result.rows[0].image)
+                fs.unlinkSync(filepath);
+            }
+            await pool.query(`DELETE FROM users WHERE id=${req.params.id}`);
+            res.status(200).json({msg: "User deleted succesfully"})
+        } catch (error) {
+            console.log(error.message)
+        }
+    } catch (error) {
+        console.error("Error occurred while fetching the user information:", error.message);
+        res.status(500).json({ error: "An error occurred while fetching the user information." });
+    }
+}
+
 export const updateUser = async(req, res) => {
     const name = req.body.name
     const email = req.body.email
@@ -33,7 +54,7 @@ export const updateUser = async(req, res) => {
         const file = req.files.file
         const fileSize = file.data.length
         const ext = path.extname(file.name)
-        const fileName = file.md5 + ext
+        const fileName = file.md5 + Date.now() + ext
         const url = `${req.protocol}://${req.get("host")}/images/${fileName}`
         const allowedType = ['.png', '.jpg', '.jpeg']
 
