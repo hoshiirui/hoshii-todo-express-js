@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import axios from 'axios'
 import { useNavigate, Link, useParams } from 'react-router-dom'
+import { useAuth } from "../provider/authProvider";
 
 const EditUser = () => {
     const buttonSpace = {
@@ -15,6 +16,7 @@ const EditUser = () => {
     const [imgtitle, setImgtitle] = useState("")
     const {id} = useParams();
     const history = useNavigate()
+    const { resetToken } = useAuth();
 
     useEffect(() => {
       getUsersById();
@@ -28,6 +30,17 @@ const EditUser = () => {
       setFile(data.image)
       setPreview(data.url)
       setImgtitle(data.image)
+    }
+
+    const deleteUser = async (userid) => {
+      console.log(`hapus ${userid}`)
+      try {
+        await axios.delete(`http://localhost:5000/users/${id}`)
+        resetToken();
+        history("/");
+      } catch (error) {
+        console.log(error)
+      }
     }
 
     const loadImage = (e) => {
@@ -98,7 +111,7 @@ const EditUser = () => {
                     </p>
                     <div className="form-group mb-3">
                         <button type="submit" className="btn btn-primary" style={buttonSpace}>Update</button>
-                        <Link to={`../login`} className="btn btn-outline-primary">Login</Link>
+                        <button type='button' onClick={()=> deleteUser(id)} className="btn btn-outline-danger">Delete</button>
                     </div>
                     {preview?(
                       <figure>
