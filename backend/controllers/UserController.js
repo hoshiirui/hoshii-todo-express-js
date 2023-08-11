@@ -68,6 +68,10 @@ export const updateUser = async(req, res) => {
         `;
         const values = [name, email, fileName, url, req.params.id];
 
+        const filepath = `./public/images/${req.body.prev}`
+        // console.log(result.rows[0].image)
+        fs.unlinkSync(filepath);
+
         file.mv(`./public/images/${fileName}`, async(err) => {
             if(err) return res.status(500).json({msg: err.message})
             try {

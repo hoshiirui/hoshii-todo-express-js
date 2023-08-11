@@ -12,6 +12,7 @@ const EditUser = () => {
     const [msg, setMsg] = useState("")
     const [file, setFile] = useState("")
     const [preview, setPreview] = useState("")
+    const [imgtitle, setImgtitle] = useState("")
     const {id} = useParams();
     const history = useNavigate()
 
@@ -26,6 +27,7 @@ const EditUser = () => {
       setEmail(data.email)
       setFile(data.image)
       setPreview(data.url)
+      setImgtitle(data.image)
     }
 
     const loadImage = (e) => {
@@ -43,6 +45,7 @@ const EditUser = () => {
               formData.append("email", email);
               // formData.append("varTest", "lalala")
               formData.append("file", file);
+              formData.append("prev", imgtitle)
               console.log(file)
               await axios.patch(`http://localhost:5000/users/${id}`, formData, {
                 headers:{
