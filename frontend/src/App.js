@@ -10,6 +10,7 @@ import { PublicRoutes } from "./routes/public.route";
 import EditUser from "./components/EditUser";
 
 function App() {
+  
   return (
     <BrowserRouter>
       <AuthProvider>
@@ -17,8 +18,8 @@ function App() {
           <Route path="/" element={<PrivateRoutes />}>
             {/* <Route path="/:order" element={<TodoList/>}/>  */}
             <Route path="/" element={<TodoList />} />
-            <Route path="/add" element={<AddTodo />} />
-            <Route path="/edit/:id" element={<EditTodo />} />
+            <Route path="/add" element={<AddTodo status="isAdd"/>} />
+            <Route path="/edit/:id" element={<AddTodo status="isEdit"/>} />
             <Route path="/edituser/:id" element={<EditUser />} />
           </Route>
           <Route path="/" element={<PublicRoutes />}>
