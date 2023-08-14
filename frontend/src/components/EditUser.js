@@ -52,7 +52,7 @@ const EditUser = () => {
     const Register = async(e) => {
         e.preventDefault();
         try {
-            if(preview){
+            if(file){
               const formData = new FormData();
               formData.append("name", name);
               formData.append("email", email);
@@ -66,6 +66,7 @@ const EditUser = () => {
                 }
               })
             }else{
+              console.log("atau kesini?")
               await axios.patch(`http://localhost:5000/users/${id}`, {
                   name: name,
                   email: email,
@@ -120,6 +121,7 @@ const EditUser = () => {
                     ): (
                       ""
                     )}
+                    {console.log(` url: ${preview}, file: ${file}`)}
                   </form>
 
                 </div>

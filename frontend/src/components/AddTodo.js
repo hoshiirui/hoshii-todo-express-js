@@ -39,6 +39,8 @@ const TodoList = (props) => {
   })
 
   useEffect(() => {
+    const decoded = jwt_decode(credentials.accessToken)
+    setuserid(decoded.userId)
     if(props.status == 'isEdit'){
       console.log(props.status)
       const getTodoById = async () =>{
@@ -152,10 +154,10 @@ const TodoList = (props) => {
                       {/* <Datepicker value={deadline} onChange={(e)=> setdeadline(e.target.value)} className="form-control"/> */}
                       <DateTimePicker onChange={setdeadline} value={deadline} className="form-control"/>
                     </div>
-                    <div className="form-group mb-3">
+                    {/* <div className="form-group mb-3">
                       <label htmlFor="useridInput" className="form-label">User ID</label>
                       <input type="text" value={userid} onChange={(e)=> setuserid(e.target.value)} className="form-control" placeholder="E.g. 0 for Krisna Wandhana" />
-                    </div>
+                    </div> */}
                     {actionButton()}
                   </form>
                   <ul className="list-group mb-0">

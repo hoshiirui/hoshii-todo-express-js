@@ -67,13 +67,22 @@ export const updateUser = async(req, res) => {
         UPDATE users SET name = $1, email = $2, image = $3, url = $4 WHERE id = $5;
         `;
         const values = [name, email, fileName, url, req.params.id];
-
+        // console.log(values)
         const filepath = `./public/images/${req.body.prev}`
+        // console.log(filepath)
         // console.log(result.rows[0].image)
-        fs.unlinkSync(filepath);
+
+        if(filepath == './public/images/null'){
+            console.log("aku disini")
+        }else{
+            fs.unlinkSync(filepath);
+        }
 
         file.mv(`./public/images/${fileName}`, async(err) => {
-            if(err) return res.status(500).json({msg: err.message})
+            if(err){
+                console.log("err atas")
+                return res.status(500).json({msg: err.message})
+            }
             try {
                 await pool.query(query, values);
                 // console.log(values)

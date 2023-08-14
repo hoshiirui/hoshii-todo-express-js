@@ -22,7 +22,7 @@ const TodoList = () => {
   const [orderMode, setOrderMode] = useState("id");
   const [filterMode, setFilterMode] = useState(3);
   const [name, setName] = useState("Shira");
-  const [url, setUrl] = useState("Gusnan goblkok");
+  const [url, setUrl] = useState("http://localhost:5000/images/a083450jterpwerb7a966828c5c988fcb.png");
   const [userid, setUserid] = useState(jwt_decode(credentials.accessToken).userId);
   const history = useNavigate();
 
@@ -55,7 +55,14 @@ const TodoList = () => {
         })
         const data = response.data[0]
         setName(data.name)
-        setUrl(data.url)
+        if(data.url != null){
+          setUrl(data.url)
+          // console.log("There's image")
+          // console.log(url)
+        }else{
+          // console.log("no image")
+          setUrl("http://localhost:5000/images/a083450jterpwerb7a966828c5c988fcb.png")
+        }
       } catch (error) {
         console.log(error)
       }
@@ -63,11 +70,6 @@ const TodoList = () => {
     const decoded = jwt_decode(credentials.accessToken)
     setUserid(decoded.userId)
     fetchUsers()
-    if(url != null){
-      console.log("There's image")
-    }else{
-      setUrl("http://localhost:5000/images/a083450jterpwerb7a966828c5c988fcb.png")
-    }
     console.log(decoded)
   }, [])
 
