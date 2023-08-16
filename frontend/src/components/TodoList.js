@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import dayjs from "dayjs"
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { useAuth } from "../provider/authProvider";
 
@@ -19,12 +18,11 @@ const TodoList = () => {
   const { credentials, resetToken, setToken} = useAuth();
   // For Getting Data
   const [todos, setTodos] = useState([]);
-  const [orderMode, setOrderMode] = useState("id");
+  const [orderMode, setOrderMode] = useState("deadline");
   const [filterMode, setFilterMode] = useState(3);
   const [name, setName] = useState("Shira");
   const [url, setUrl] = useState("http://localhost:5000/images/a083450jterpwerb7a966828c5c988fcb.png");
   const [userid, setUserid] = useState(jwt_decode(credentials.accessToken).userId);
-  const history = useNavigate();
 
   useEffect(() => {
     const fetchTodos = async () => {
@@ -157,8 +155,30 @@ const TodoList = () => {
     }
   };
 
+  const todoTitle = (status, title, description) => {
+    if(status === 0){
+      return(
+        <>
+          <b>{title}</b>: {description}
+        </>
+      )
+    }else if(status === 2){
+      return(
+        <>
+          <s><b>{title}</b>: {description}</s>
+        </>
+      )
+    }else{
+      return(
+        <>
+          <span style={customStyle}><b>{title}</b>: {description}</span>
+        </>
+      )
+    }
+  }
+
   return (
-    <section className="vh-100" style={{ backgroundColor: "#e2d5de" }}>
+    <section className="vh-1000" style={{ backgroundColor: "#e2d5de" }}>
       <div className="container py-5 h-100">
         <div className="row d-flex justify-content-center align-items-center h-100">
           <div className="col col-xl-10">
@@ -221,125 +241,43 @@ const TodoList = () => {
                       undefined,
                       options
                     );
-                    if (todo.status === 0) {
-                      return (
-                        <li
-                          key={todo.id}
-                          className="list-group-item d-flex justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom rounded-0 mb-0"
-                        >
-                          <div className="d-flex align-items-center">
-                            {/* <input className="form-check-input me-2" type="checkbox" onClick={()=> changeStatus(todo.id, todo.title, todo.description, todo.status, todo.deadline, todo.userid)} defaultValue aria-label="..."/> */}
-                            <button
-                              style={buttonSpace}
-                              className="btn btn-primary"
-                              type="button"
-                              onClick={() =>
-                                changeStatus(
-                                  todo.id,
-                                  todo.title,
-                                  todo.description,
-                                  todo.status,
-                                  todo.deadline,
-                                  todo.userid
-                                )
-                              }
-                            >
-                              To-Do
-                            </button>
-                            <b>{todo.title}</b>: {todo.description}
-                          </div>
-                          <p>{deadlineTime}</p>{" "}
-                          {/* Display the extracted time */}
-                          {/* <button className="btn btn-primary">More</button> */}
-                          <Link
-                            to={`edit/${todo.id}`}
-                            className="btn btn-primary"
+                    return (
+                      <li
+                        key={todo.id}
+                        className="list-group-item d-flex justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom rounded-0 mb-0"
+                      >
+                        <div className="d-flex align-items-center">
+                          
+                          <button
+                            style={buttonSpace}
+                            className={todo.status === 0 ? 'btn btn-primary' : todo.status === 1 ? 'btn btn-warning' : 'btn btn-success'}
+                            type="button"
+                            onClick={() =>
+                              changeStatus(
+                                todo.id,
+                                todo.title,
+                                todo.description,
+                                todo.status,
+                                todo.deadline,
+                                todo.userid
+                              )
+                            }
                           >
-                            More
-                          </Link>
-                        </li>
-                      );
-                    } else if (todo.status === 2) {
-                      return (
-                        <li
-                          key={todo.id}
-                          className="list-group-item d-flex justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom rounded-0 mb-0"
+                            {todo.status === 0 ? 'To-Do' : todo.status === 1 ? 'In Progress' : 'Done'}
+                          </button>
+                          {todoTitle(todo.status, todo.title, todo.description)}
+                        </div>
+                        <p>{deadlineTime}</p>{" "}
+                        {/* Display the extracted time */}
+                        {/* <button className="btn btn-primary">More</button> */}
+                        <Link
+                          to={`edit/${todo.id}`}
+                          className="btn btn-primary"
                         >
-                          <div className="d-flex align-items-center">
-                            {/* <input className="form-check-input me-2" type="checkbox" onClick={()=> changeStatus(todo.id, todo.title, todo.description, todo.status, todo.deadline, todo.userid)} defaultValue aria-label="..." defaultChecked /> */}
-                            <button
-                              style={buttonSpace}
-                              className="btn btn-success"
-                              type="button"
-                              onClick={() =>
-                                changeStatus(
-                                  todo.id,
-                                  todo.title,
-                                  todo.description,
-                                  todo.status,
-                                  todo.deadline,
-                                  todo.userid
-                                )
-                              }
-                            >
-                              Done
-                            </button>
-                            <s>
-                              <b>{todo.title}</b>: {todo.description}
-                            </s>
-                          </div>
-                          <p>{deadlineTime}</p>{" "}
-                          {/* Display the extracted time */}
-                          {/* <button className="btn btn-primary">More</button> */}
-                          <Link
-                            to={`edit/${todo.id}`}
-                            className="btn btn-primary"
-                          >
-                            More
-                          </Link>
-                        </li>
-                      );
-                    } else {
-                      return (
-                        <li
-                          key={todo.id}
-                          className="list-group-item d-flex justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom rounded-0 mb-0"
-                        >
-                          <div className="d-flex align-items-center">
-                            {/* <input className="form-check-input me-2" type="checkbox" onClick={()=> changeStatus(todo.id, todo.title, todo.description, todo.status, todo.deadline, todo.userid)} defaultValue aria-label="..." /> */}
-                            <button
-                              style={buttonSpace}
-                              className="btn btn-warning"
-                              type="button"
-                              onClick={() =>
-                                changeStatus(
-                                  todo.id,
-                                  todo.title,
-                                  todo.description,
-                                  todo.status,
-                                  todo.deadline,
-                                  todo.userid
-                                )
-                              }
-                            >
-                              In Progress
-                            </button>
-                            <span style={customStyle}>
-                              <b>{todo.title}</b>: {todo.description}
-                            </span>
-                          </div>
-                          <p>{deadlineTime}</p>{" "}
-                          {/* Display the extracted time */}
-                          {/* <button className="btn btn-primary">More</button> */}
-                          <Link
-                            to={`edit/${todo.id}`}
-                            className="btn btn-primary"
-                          >
-                            More
-                          </Link>
-                        </li>
-                      );
-                    }
+                          More
+                        </Link>
+                      </li>
+                    );
                   })}
                 </ul>
               </div>
